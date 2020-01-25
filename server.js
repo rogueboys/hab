@@ -9,6 +9,9 @@ server.listen(port, () => {
   console.log('Server listening at port: ', port);
 });
 
-io.on('connection', () => {
+io.on('connection', (socket) => {
   console.log('A client connected: ' + socket.id);
+  socket.on('control', (tilt) => {
+    io.emit('update', { player: socket.id, tilt: tilt });
+  });
 });
