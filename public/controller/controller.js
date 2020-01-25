@@ -1,5 +1,24 @@
 const socket = io.connect();
 
+const ROOM = 'test';
+
 function main() {
-  socket.emit();
+  let registered = false;
+  socket.emit('connect mobile', { room: ROOM }, (data) => {
+    if(data.registered) {
+      registered = true;
+    }else{
+      console.log('Error: ' + data);
+    }
+  });
+
+  let x = 1;
+  setInterval(() => {
+    if (registered) {
+      socket.emit('update movement', { tiltData: x});
+      x++;
+    }
+  }, 3000);
 }
+
+main();
