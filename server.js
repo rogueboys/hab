@@ -19,7 +19,7 @@ io.on('connection', (socket) => {
       roomSocket: socket, 
       mobileSockets: [] 
     };
-    console.log('Created a new room: ' + data.room + ' with data: ' + rooms[data.room]);
+    console.log('Created a new room: ' + data.room);
   });
 
   socket.on("connect mobile", (data, verify) => {
@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
   socket.on("update movement", (data) => {
     if (socket.roomId && socket.roomId in rooms) {
       rooms[socket.roomId].roomSocket.emit('update position', socket.id, data);
-      console.log('Updated movement!');
+      console.log('Updated movement! ' + data.tiltData);
     }
   });
 });
