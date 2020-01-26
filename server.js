@@ -32,14 +32,17 @@ io.on('connection', (socket) => {
   // });
 
   socket.on('join game', () => {
+    console.log('New player connected')
     players.push(socket.id);
   })
 
   socket.on("phone", (data) => {
-    socket.broadcast.emit("update position", {
-      ...data,
-      player: players.indexOf(socket.id)
-    });
+    if (players.includes(socket.id)) {
+      socket.broadcast.emit("update position", {
+        ...data,
+        player: players.indexOf(socket.id)
+      });
+    }
   });
 
   // socket.on("connect mobile", (data, verify) => {
