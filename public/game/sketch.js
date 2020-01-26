@@ -64,7 +64,8 @@ function checkCollisions() {
       // i think this makes the most sense since accelerometer controls are pretty jittery
       if (p1 !== p2 && !removedPlayers.includes(p2) && players[p1].collides(players[p2])) {
         // p2 hits the tail of p1
-        removedPlayers.push(p2)
+        console.log(p2 + ' collided with ' + p1);
+        removedPlayers.push(p2);
       }
     }
   }
@@ -131,7 +132,7 @@ class Player {
 
   collides(otherPlayer) {
     return this.history.some((hPos) => {
-      return dist(hPos.x, hPos.y, otherPlayer.pos.x, otherPlayer.pos.y) > this.radius + otherPlayer.radius;
+      return dist(hPos.x, hPos.y, otherPlayer.pos.x, otherPlayer.pos.y) < this.radius + otherPlayer.radius;
     });
   }
   
