@@ -30,6 +30,7 @@ class player {
     this.speed = speed;
     this.playNum = playNum;
     this.radius = 10;
+    this.history = [];
     switch (playNum) {
       case 1:
         this.pos = createVector(windowWidth / 10, windowHeight / 10);
@@ -71,6 +72,15 @@ class player {
   }
   move() {
     this.pos.add(this.vel);
+    this.history.push(this.pos);
+    noFill();
+    stroke(255);
+    beginShape();
+    for (var i = 0; i < this.history.length; i++) {
+      var pos = this.history[i];
+      vertex(pos.x, pos.y);
+    }
+    endShape();
   }
   turnBoi(deg) {
     this.direction += deg;
