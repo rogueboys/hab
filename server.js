@@ -31,7 +31,9 @@ io.on('connection', (socket) => {
   //   console.log('Created a new room: ' + data.room);
   // });
 
-  players.push(socket.id);
+  socket.on('join game', () => {
+    players.push(socket.id);
+  })
 
   socket.on("phone", (data) => {
     socket.broadcast.emit("update position", {

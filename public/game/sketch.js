@@ -12,7 +12,9 @@ function setup() {
   players = [p1, p2, p3, p4];
   
   socket.on('update position', (data) => {
-    p1.turnBoi(data.turn / 45);
+    if (data.player < players.length) {
+      players[data.player].turnBoi(data.turn / 45);
+    }
   });
 }
 
@@ -89,6 +91,19 @@ class Player {
     this.history.push(this.pos);
     if (this.history.length >= 30) {
       this.history.shift();
+    }
+    if (this.pos.x > windowWidth) {
+      this.pos.x = Math.abs(this.pos.x % windowWidth);
+    }
+    else if (this.pos.x < 0) {
+      this.pos.x = windowWidth + this.pos.x;
+    }
+    
+    if (this.pos.y > windowHeight) {
+      this.pos.y = Math.abs(this.pos.y % windowHeight);
+    }
+    else if (this.pos.y < 0) {
+      this.pos.y = windowHeight + this.pos.y;
     }
   }
   

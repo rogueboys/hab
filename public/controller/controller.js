@@ -24,6 +24,12 @@ function main() {
     button.onclick = DeviceOrientationEvent.requestPermission;
     document.body.appendChild(button);
   }
+  const button2 = document.createElement('button');
+  button2.innerHTML = 'join game';
+  button2.onclick = () => {
+    socket.emit('join game');
+  }
+  document.body.appendChild(button2);
 }
 
 main();
