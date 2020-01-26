@@ -1,36 +1,34 @@
-var p1;
-var p2;
-var p3;
-var p4;
+let players;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  p1 = new player(10, 10, 1);
-  p2 = new player(10, 10, 2);
-  p3 = new player(10, 10, 3);
-  p4 = new player(10, 10, 4);
+ 
+  const p1 = new Player(10, 10, 1);
+  const p2 = new Player(10, 10, 2);
+  const p3 = new Player(10, 10, 3);
+  const p4 = new Player(10, 10, 4);
+  
+  players = [p1, p2, p3, p4];
 }
 
 function draw() {
   background(0);
 
-  p1.show();
-  p2.show();
-  p3.show();
-  p4.show();
-  p1.move();
-  p2.move();
-  p3.move();
-  p4.move();
-  p1.turnBoi(0.2);
+  for (let p of players) {
+    p.update();
+    p.draw();
+  }
 }
 
-class player {
+class Player {
+
   constructor(turn, speed, playNum) {
     this.turn = turn;
     this.speed = speed;
     this.playNum = playNum;
     this.radius = 10;
     this.history = [];
+
     switch (playNum) {
       case 1:
         this.pos = createVector(windowWidth / 10, windowHeight / 10);
@@ -66,13 +64,10 @@ class player {
     this.vel = p5.Vector.fromAngle(radians(this.direction));
     this.vel.mult(this.speed);
   }
-  show() {
+
+  draw() {
     fill(this.color);
     ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
-  }
-  move() {
-    this.pos.add(this.vel);
-    this.history.push(this.pos);
     noFill();
     stroke(255);
     beginShape();
@@ -82,8 +77,17 @@ class player {
     }
     endShape();
   }
+  
+  update() {
+    this.vel = p5.Vector.fromAngle(radians(this.direction));
+    this.pos.add(this.vel);
+    this.history.push(this.pos);
+    if (this.history.length >= 30) {
+      this.history.shift();
+    }
+  }
+  
   turnBoi(deg) {
     this.direction += deg;
-    this.vel = p5.Vector.fromAngle(radians(this.direction));
   }
 }
