@@ -25,9 +25,13 @@ function handleOrientation(event) {
     };
     socket.emit("phone", out);
   }
-  leftTri.style.borderLeft = "50px solid # ";
-  rightTri.style.borderLeft = "50px solid # ";
-  upTri.style.borderLeft = "50px solid # ";
+  const num = 255 - (Math.floor((Math.floor(out.turn)/50) * 255)
+  const num2 = Math.floor((50+(Math.floor(out.speed))/50)*255
+  //resting it is 0
+  // very forward it is 50+
+  leftTri.style.borderLeft = "50px solid rgb(" + -num + ", " + -num + ", " + -num + ")";
+  rightTri.style.borderLeft = "50px solid rgb(" + num + ", " + num + ", " + num + ")";
+  upTri.style.borderLeft = "50px solid rgb(";
 
   // Do stuff with the new orientation data
 }
