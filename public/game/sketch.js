@@ -14,11 +14,29 @@ function setup() {
 
   const startButton = document.createElement("button");
   startButton.innerHTML = "Start game";
+  startButton.style.cssText =
+    "position: absolute; left: 50%; margin-left: -50px; top: 50%; margin-top: -50px; padding: 15px 25px; font-size: 24px; cursor: pointer; text-align: center; text-decoration: none; outline: none; color: #fff; background-color: #4CAF50; border: none; border-radius: 15px; box-shadow: 0 9px #999;";
+  startButton.onmouseover = () => {
+    startButton.style.backgroundColor = "#3e8e41";
+  };
+  startButton.onmouseout = () => {
+    startButton.style.backgroundColor = "#4CAF50";
+  };
+  startButton.onmousedown = () => {
+    startButton.style.boxShadow = "0 5px #666";
+    startButton.style.boxShadow = "translateY(4px)";
+  };
   startButton.onclick = () => {
     document.body.removeChild(startButton);
     started = true;
   };
   document.body.prepend(startButton);
+
+  const title = document.createElement("h1");
+  title.innerHTML = "Snake Party!";
+  title.style.cssText =
+    "position: absolute; left: 50%; margin-left: -180px; top: 20%; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; font-size: 5em";
+  document.body.append(title);
 
   const p1 = new Player(10, 10, 1);
   const p2 = new Player(10, 10, 2);
@@ -37,6 +55,10 @@ function setup() {
       players[data.player] = allPlayers[data.player];
     }
   });
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function draw() {

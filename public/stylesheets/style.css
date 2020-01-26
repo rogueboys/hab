@@ -11,6 +11,14 @@
   margin-right: auto;
 }
 
+body {
+  margin: 0px;
+}
+
+canvas {
+  display: block;
+}
+
 .triangle-left {
   width: 0;
   height: 0;
