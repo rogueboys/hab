@@ -17,7 +17,8 @@ server.listen(PORT, () => {
   console.log('Server listening at port: ', PORT);
 });
 
-let players = {};
+// let colors = [[255, 0, 0], [255, 184, 255], [0, 255, 255], [255, 184, 82]];
+let players = [];
 
 io.on('connection', (socket) => {
   console.log('A client connected: ' + socket.id);
@@ -30,8 +31,13 @@ io.on('connection', (socket) => {
   //   console.log('Created a new room: ' + data.room);
   // });
 
+  players.push(socket.id);
+
   socket.on("phone", (data) => {
-    socket.broadcast.emit("update position", data);
+    socket.broadcast.emit("update position", {
+      ...data,
+      player: players.indexOf(socket.id)
+    });
   });
 
   // socket.on("connect mobile", (data, verify) => {
