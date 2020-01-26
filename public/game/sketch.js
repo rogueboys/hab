@@ -1,4 +1,5 @@
 let players;
+const socket = io();
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -9,6 +10,10 @@ function setup() {
   const p4 = new Player(10, 10, 4);
   
   players = [p1, p2, p3, p4];
+  
+  socket.on('update position', (data) => {
+    p1.turnBoi(data.turn / 45);
+  });
 }
 
 function draw() {

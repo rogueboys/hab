@@ -4,9 +4,9 @@ window.addEventListener("deviceorientation", handleOrientation, true);
 const leftTri = document.getElementsByClassName("triangle-left")[0];
 const rightTri = document.getElementsByClassName("triangle-right")[0];
 const upTri = document.getElementsByClassName("triangle-up")[0];
+const display = document.getElementById('gamma');
 
 // const ROOM = 'test';
-
 function main() {
   // let registered = false;
   // socket.emit('connect mobile', { room: ROOM }, (data) => {
@@ -16,6 +16,12 @@ function main() {
   //     console.log('Error: ' + data);
   //   }
   // });
+  if (DeviceOrientationEvent.requestPermission) {
+    const button = document.createElement('button');
+    button.innerHTML = 'enable device orientation';
+    button.onclick = DeviceOrientationEvent.requestPermission;
+    document.body.appendChild(button);
+  }
 }
 
 main();
@@ -40,7 +46,9 @@ function handleOrientation(event) {
       speed: event.gamma
     };
   }
+
   socket.emit("phone", out);
+  display.innerHTML = event.beta;
   // const num = 255 - Math.floor((Math.floor(out.turn) / 50) * 255);
   // const num2 = Math.floor((50 + Math.floor(out.speed) / 50) * 255);
   //resting it is 0
