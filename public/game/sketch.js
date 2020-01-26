@@ -1,6 +1,8 @@
 
 const socket = io();
 
+const TAIL_LENGTH = 70;
+
 let allPlayers;
 let players;
 let removedPlayers;
@@ -141,7 +143,7 @@ class Player {
     this.pos.add(this.vel);
     if (this.historyIdx % this.historyFreq === 0) {
       this.history.push(this.pos.copy());
-      if (this.history.length >= 30) {
+      if (this.history.length >= TAIL_LENGTH) {
         this.history.shift();
       }
     }
