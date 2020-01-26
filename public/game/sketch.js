@@ -1,4 +1,3 @@
-
 const socket = io();
 
 const TAIL_LENGTH = 70;
@@ -13,12 +12,12 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   started = false;
 
-  const startButton = document.createElement('button');
-  startButton.innerHTML = 'Start game';
+  const startButton = document.createElement("button");
+  startButton.innerHTML = "Start game";
   startButton.onclick = () => {
     document.body.removeChild(startButton);
     started = true;
-  }
+  };
   document.body.prepend(startButton);
 
   const p1 = new Player(10, 10, 1);
@@ -30,12 +29,12 @@ function setup() {
   players = {};
   removedPlayers = [];
 
-  
-  socket.on('update position', (data) => {
+  socket.on("update position", data => {
     if (data.player in players && !removedPlayers.includes(data.player)) {
       players[data.player].turnBoi(data.turn / 45);
+      players[data.player].speedUpdate(data.speed);
     } else {
-      players[data.player] = allPlayers[data.player]
+      players[data.player] = allPlayers[data.player];
     }
   });
 }
@@ -47,9 +46,9 @@ function draw() {
     if (removedPlayers.includes(p)) {
       continue;
     }
-    let player = players[p]
+    let player = players[p];
     if (started) {
-      checkCollisions()
+      checkCollisions();
       player.update();
     }
     player.draw();
@@ -64,9 +63,13 @@ function checkCollisions() {
     for (let p2 in players) {
       // allow players to collide with selves (similar to slither.io)
       // i think this makes the most sense since accelerometer controls are pretty jittery
-      if (p1 !== p2 && !removedPlayers.includes(p2) && players[p1].collides(players[p2])) {
+      if (
+        p1 !== p2 &&
+        !removedPlayers.includes(p2) &&
+        players[p1].collides(players[p2])
+      ) {
         // p2 hits the tail of p1
-        console.log(p2 + ' collided with ' + p1);
+        console.log(p2 + " collided with " + p1);
         removedPlayers.push(p2);
       }
     }
@@ -74,7 +77,6 @@ function checkCollisions() {
 }
 
 class Player {
-
   constructor(turn, speed, playNum) {
     this.turn = turn;
     this.speed = speed;
@@ -84,7 +86,7 @@ class Player {
 
     // how often to record position in history for drawing and collision checking
     // reduces time spent drawing, etc
-    this.historyFreq = 5; 
+    this.historyFreq = 5;
     this.historyIdx = 0;
 
     switch (playNum) {
@@ -118,7 +120,7 @@ class Player {
         this.color = color(255, 184, 82);
         break;
     }
-    this.speed = 0.5;
+    this.speed = 1;
     this.vel = p5.Vector.fromAngle(radians(this.direction));
     this.vel.mult(this.speed);
   }
@@ -127,19 +129,36 @@ class Player {
     noStroke();
     fill(this.color);
     for (let i = 0; i < this.history.length; i++) {
-      ellipse(this.history[i].x, this.history[i].y, this.radius * 2, this.radius * 2);
+      ellipse(
+        this.history[i].x,
+        this.history[i].y,
+        this.radius * 2,
+        this.radius * 2
+      );
     }
     ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
   }
 
   collides(otherPlayer) {
-    return this.history.some((hPos) => {
-      return dist(hPos.x, hPos.y, otherPlayer.pos.x, otherPlayer.pos.y) < this.radius + otherPlayer.radius;
+    return this.history.some(hPos => {
+      return (
+        dist(hPos.x, hPos.y, otherPlayer.pos.x, otherPlayer.pos.y) <
+        this.radius + otherPlayer.radius
+      );
     });
   }
-  
+  speedUpdate(add) {
+    if (add > 30) {
+      add = 30.0;
+    }
+    this.speed = 0.5 + add / 10.0;
+    if (this.speed < 1) {
+      this.speed = 1;
+    }
+  }
   update() {
     this.vel = p5.Vector.fromAngle(radians(this.direction));
+    this.vel.mult(this.speed);
     this.pos.add(this.vel);
     if (this.historyIdx % this.historyFreq === 0) {
       this.history.push(this.pos.copy());
@@ -150,19 +169,17 @@ class Player {
     this.historyIdx++;
     if (this.pos.x > windowWidth) {
       this.pos.x = Math.abs(this.pos.x % windowWidth);
-    }
-    else if (this.pos.x < 0) {
+    } else if (this.pos.x < 0) {
       this.pos.x = windowWidth + this.pos.x;
     }
-    
+
     if (this.pos.y > windowHeight) {
       this.pos.y = Math.abs(this.pos.y % windowHeight);
-    }
-    else if (this.pos.y < 0) {
+    } else if (this.pos.y < 0) {
       this.pos.y = windowHeight + this.pos.y;
     }
   }
-  
+
   turnBoi(deg) {
     this.direction += deg;
   }
