@@ -2,13 +2,14 @@
 const socket = io();
 
 let allPlayers;
-let players = {};
-let removedPlayers = [];
+let players;
+let removedPlayers;
 
-let started = false;
+let started;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  started = false;
 
   const startButton = document.createElement('button');
   startButton.innerHTML = 'Start game';
@@ -24,6 +25,8 @@ function setup() {
   const p4 = new Player(10, 10, 4);
 
   allPlayers = [p1, p2, p3, p4];
+  players = {};
+  removedPlayers = [];
 
   
   socket.on('update position', (data) => {
@@ -76,7 +79,8 @@ class Player {
     this.radius = 10;
     this.history = [];
 
-    // how often to record position in history; recording every frame is overkill...
+    // how often to record position in history for drawing and collision checking
+    // reduces time spent drawing, etc
     this.historyFreq = 5; 
     this.historyIdx = 0;
 
